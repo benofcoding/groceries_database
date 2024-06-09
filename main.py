@@ -29,6 +29,19 @@ def Print_name_and_ID_for_Groceries():
     for grocery in results:
         print(f"| {grocery[0]:<{Product_ID_Length}} | {grocery[1]:<{Product_Name_Length}} |")
 
+def Print_brand_and_ID_for_brands():
+    #establish interface
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    #run sql quere
+    sql = "SELECT Brand.ID, Brand.Name FROM Brand"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    #print nicely
+    print("  ID   Brand")
+    for brand in results:
+        print(f"| {brand[0]:<{Brand_ID_Length}} | {brand[1]:<{Brand_Name_Length}} |")
+
 def search_for_grocery():
     #show name and id table
     Print_name_and_ID_for_Groceries()
@@ -187,16 +200,62 @@ def show_greaterthan_or_smallerthan():
         except:
             print("that is not a valid input")
 
-
-
+def sort_by_one_brand():
+    #show name and id table
+    Print_brand_and_ID_for_brands()
+    print("")
+    #establish interface
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    #run until finished with quere
+    while True:
+        #try execpt to catch false ID inputs
+        try:
+            #get users wanted product to show or go back to main menu if wanted
+            ID = input("Input the ID of the Brand you would like to sort by about or input 'back' to go back?\n")
+            if ID == "back":
+                main_menu()
+            #run sql quere
+            sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE Brand.ID = '{ID}'"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            #if the ID requested is out of range print invalid id
+            if len(results) == 0:
+                print("Invalid input")
+            else:
+                #print the acronyms key for column names
+                Acronmys = ["P(c) = Price in cents",
+                            "SS = Servin size in grams",
+                            "CPS = Calories per serving",
+                            "S = servings"]
+                print("")
+                for acromyn in Acronmys:
+                    print(acromyn)
+                #print the table and columns nicely
+                print("")
+                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
+                print("-"*144)
+                for result in results:
+                    print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
+                print("-"*144)
+                print("")
+                #stop the function
+                db.close()
+                break   
+        except:
+            #if the id inputed wasnt an integer print string:
+            print("Invalid input")
+        
 def main_menu():
     while True:
         all_options = {"1":search_for_grocery,
                        "2":ORDER_BY,
-                       "3":show_greaterthan_or_smallerthan}
+                       "3":show_greaterthan_or_smallerthan,
+                       "4":sort_by_one_brand}
         all_options_text = ["| 1.    | Search for a specific item                      |",
                             "| 2.    | sort by a specific data type                    |",
                             "| 3.    | sort any column by greater than or smaller than |",
+                            "| 4.    | search for all items with a specific brand      |",
                             "| quit. | Quit the program                                |"]
         for option in all_options_text:
             print(option)
