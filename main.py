@@ -46,6 +46,8 @@ def search_for_grocery():
                 print("Invalid input")
             else:
                 result = results[0]
+                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
+                print("-"*144)
                 print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
             db.close()
             break
@@ -58,10 +60,27 @@ def search_for_grocery():
 
 
 def main_menu():
-    print("1. search for a specific item")
-    option_chosen = input("what would you like to do?\n")
-    all_options = {"1":search_for_grocery}
-    all_options[option_chosen]()
+    while True:
+
+        all_options = {"1":search_for_grocery}
+        all_options_text = ["| 1.    | Search for a specific item |",
+                            "| quit. | Quit the program           |"]
+        
+        for option in all_options_text:
+            print(option)
+        
+        try:
+            
+            option_chosen = input("what would you like to do?\n") 
+            if str(option_chosen) in all_options:    
+                all_options[option_chosen]()
+            elif str(option_chosen) == "quit" or "quit." or "Quit" or "Quit.":
+                break
+            else:
+                print("that is not an option")
+                
+        except:
+            print("that is not an option")
 
 main_menu()
 
