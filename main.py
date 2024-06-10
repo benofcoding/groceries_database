@@ -16,6 +16,19 @@ Product_Type_ID_Length = 2
 Product_Type_Length = 30
 
 #all functions
+def Print_producttype_and_ID_for_products():
+    #establish interface
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    #run sql quere
+    sql = "SELECT Product_type.ID, Product_type.Type FROM Product_Type"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    #print nicely
+    print("  ID   Brand")
+    for product in results:
+        print(f"| {product[0]:<{Product_Type_ID_Length}} | {product[1]:<{Product_Type_Length}} |")
+
 def Print_name_and_ID_for_Groceries():
     #establish interface
     db = sqlite3.connect(DATABASE)
@@ -245,18 +258,66 @@ def sort_by_one_brand():
         except:
             #if the id inputed wasnt an integer print string:
             print("Invalid input")
-        
+
+def sort_by_one_product_type():
+    #show product_type and ID table
+    Print_producttype_and_ID_for_products()
+    print("")
+    #establish interface
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    #run until finished with quere
+    while True:
+        #try execpt to catch false ID inputs
+        try:
+            #get users wanted product to show or go back to main menu if wanted
+            ID = input("Input the ID of the Product type you would like to display or input 'back' to go back?\n")
+            if ID == "back":
+                main_menu()
+            #run sql quere
+            sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE Product_type.ID = '{ID}'"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            #if the ID requested is out of range print invalid id
+            if len(results) == 0:
+                print("Invalid input")
+            else:
+                #print the acronyms key for column names
+                Acronmys = ["P(c) = Price in cents",
+                            "SS = Servin size in grams",
+                            "CPS = Calories per serving",
+                            "S = servings"]
+                print("")
+                for acromyn in Acronmys:
+                    print(acromyn)
+                #print the table and columns nicely
+                print("")
+                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
+                print("-"*144)
+                for result in results:
+                    print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
+                print("-"*144)
+                print("")
+                #stop the function
+                db.close()
+                break   
+        except:
+            #if the id inputed wasnt an integer print string:
+            print("Invalid input") 
+
 def main_menu():
     while True:
         all_options = {"1":search_for_grocery,
                        "2":ORDER_BY,
                        "3":show_greaterthan_or_smallerthan,
-                       "4":sort_by_one_brand}
-        all_options_text = ["| 1.    | Search for a specific item                      |",
-                            "| 2.    | sort by a specific data type                    |",
-                            "| 3.    | sort any column by greater than or smaller than |",
-                            "| 4.    | search for all items with a specific brand      |",
-                            "| quit. | Quit the program                                |"]
+                       "4":sort_by_one_brand,
+                       "5":sort_by_one_product_type}
+        all_options_text = ["| 1.    | Search for a specific item                        |",
+                            "| 2.    | sort by a specific data type                      |",
+                            "| 3.    | sort any column by greater than or smaller than   |",
+                            "| 4.    | search for all items with a specific brand        |",
+                            "| 5.    | search for all items with a specific product type |",
+                            "| quit. | Quit the program                                  |"]
         for option in all_options_text:
             print(option)
         try:
