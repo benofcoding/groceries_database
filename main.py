@@ -76,7 +76,9 @@ def search_for_grocery():
             results = cursor.fetchall()
             #if the ID requested is out of range print invalid id
             if len(results) == 0:
+                print("")
                 print("Invalid input")
+                print("")
             else:
                 #print the acronyms key for column names
                 Acronmys = ["P(c) = Price in cents",
@@ -99,7 +101,9 @@ def search_for_grocery():
                 break   
         except:
             #if the id inputed wasnt an integer print string:
+            print("")
             print("Invalid input")
+            print("")
 
 def ORDER_BY():
     options = {"1":"Groceries.price_c",
@@ -126,11 +130,15 @@ def ORDER_BY():
         elif Sort_by == "1" or Sort_by == "2" or Sort_by == "3" or Sort_by == "4":
             break
         else:
+            print("")
             print("that is an invalid input")
+            print("")
 
     while True:
-        ASC_DESC = input("do you want to sort by ascending or descending? ASC/DESC\n")
-        if ASC_DESC == "ASC" or ASC_DESC == "DESC":
+        ASC_DESC = input("do you want to sort by ascending or descending? ASC/DESC. type 'back' if you want to go back.\n")
+        if ASC_DESC == "back":
+            main_menu()
+        if ASC_DESC.lower() == "asc" or ASC_DESC.lower() == "desc":
             sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID ORDER BY {options[Sort_by]} {ASC_DESC}"
             cursor.execute(sql)
             results = cursor.fetchall()
@@ -148,9 +156,13 @@ def ORDER_BY():
             for result in results:
                 print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
             print("-"*144)
+            print("")
             db.close()
+            break
         else:
+            print("")
             print("Invalid input")
+            print("")
 
 def show_greaterthan_or_smallerthan():
     options = {"1":"Groceries.price_c",
@@ -175,6 +187,7 @@ def show_greaterthan_or_smallerthan():
         elif column == "1" or column == "2" or column == "3" or column == "4":
             break
         else:
+            print("")
             print("that is not a valid input")
             print("")
     while True:  
@@ -184,7 +197,9 @@ def show_greaterthan_or_smallerthan():
         elif operator == "1" or operator == "2":
             break
         else:
+            print("")
             print("that is not a valid input")     
+            print("")
     while True:
         try:
             value = int(input("what value would you like to sort by? If you want to go back to main menu input 'back'.\n"))
@@ -211,7 +226,9 @@ def show_greaterthan_or_smallerthan():
             db.close()
             break
         except:
+            print("")
             print("that is not a valid input")
+            print("")
 
 def sort_by_one_brand():
     #show name and id table
@@ -234,7 +251,9 @@ def sort_by_one_brand():
             results = cursor.fetchall()
             #if the ID requested is out of range print invalid id
             if len(results) == 0:
+                print("")
                 print("Invalid input")
+                print("")
             else:
                 #print the acronyms key for column names
                 Acronmys = ["P(c) = Price in cents",
@@ -257,7 +276,9 @@ def sort_by_one_brand():
                 break   
         except:
             #if the id inputed wasnt an integer print string:
+            print("")
             print("Invalid input")
+            print("")
 
 def sort_by_one_product_type():
     #show product_type and ID table
@@ -280,7 +301,9 @@ def sort_by_one_product_type():
             results = cursor.fetchall()
             #if the ID requested is out of range print invalid id
             if len(results) == 0:
+                print("")
                 print("Invalid input")
+                print("")
             else:
                 #print the acronyms key for column names
                 Acronmys = ["P(c) = Price in cents",
@@ -303,7 +326,9 @@ def sort_by_one_product_type():
                 break   
         except:
             #if the id inputed wasnt an integer print string:
+            print("")
             print("Invalid input") 
+            print("")
 
 def main_menu():
     while True:
@@ -324,11 +349,15 @@ def main_menu():
             option_chosen = input("what would you like to do?\n") 
             if str(option_chosen) in all_options:    
                 all_options[option_chosen]()
-            elif str(option_chosen).lower() ==  "quit." or "quit":
+            elif str(option_chosen).lower() ==  "quit." or str(option_chosen).lower() == "quit":
                 break
             else:
-                print("that is not an option")  
+                print("")
+                print("that is not an option") 
+                print("") 
         except:
+            print("")
             print("that is not an option")
+            print("")
 
 main_menu()
