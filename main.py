@@ -13,7 +13,7 @@ Price_length = 4
 Brand_ID_Length = 2
 Brand_Name_Length = 15
 Product_Type_ID_Length = 2
-Product_Type_Length = 30
+Product_Type_Length = 25
 
 #all functions
 def Print_producttype_and_ID_for_products():
@@ -169,22 +169,22 @@ def show_greaterthan_or_smallerthan():
             print(option)
         print("")
 
-        column = int(input("input the ID of the column you want to sort. If you want to go back to main menu input 'back'.\n"))
+        column = input("input the ID of the column you want to sort. If you want to go back to main menu input 'back'.\n")
         if column == "back":
             main_menu()
-        elif column == 1 or column == 2 or column == 3 or column == 4:
+        elif column == "1" or column == "2" or column == "3" or column == "4":
             break
         else:
             print("that is not a valid input")
             print("")
     while True:  
-        operator = int(input("Would you like to sort by greater than or less than?, input 1 or 2. If you want to go back to main menu input 'back'.\n"))
+        operator = input("Would you like to sort by greater than or less than?, input 1 or 2. If you want to go back to main menu input 'back'.\n")
         if operator == "back":
             main_menu()
-        elif int(operator) == 1 or operator == 2:
+        elif operator == "1" or operator == "2":
             break
         else:
-            print("that is not a valid input")       
+            print("that is not a valid input")     
     while True:
         try:
             value = int(input("what value would you like to sort by? If you want to go back to main menu input 'back'.\n"))
