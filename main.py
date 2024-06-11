@@ -16,6 +16,31 @@ Product_Type_ID_Length = 2
 Product_Type_Length = 25
 
 #all functions
+def print_whole_table():
+    #establish interface
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    #run sql quere
+    sql = "SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID"
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    #print nicely
+    Acronmys = ["P(c) = Price in cents",
+                "SS = Servin size in grams",
+                "CPS = Calories per serving",
+                "S = servings"]
+    print("")
+    for acromyn in Acronmys:
+        print(acromyn)
+    print("")
+    print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
+    print("-"*144)
+    for result in results:
+        print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
+    print("-"*144)
+    print("")
+    db.close() 
+
 def Print_producttype_and_ID_for_products():
     #establish interface
     db = sqlite3.connect(DATABASE)
@@ -25,9 +50,11 @@ def Print_producttype_and_ID_for_products():
     cursor.execute(sql)
     results = cursor.fetchall()
     #print nicely
-    print("  ID   Brand")
+    print("| ID | Brand                     |")
+    print("-"*34)
     for product in results:
         print(f"| {product[0]:<{Product_Type_ID_Length}} | {product[1]:<{Product_Type_Length}} |")
+    print("-"*34)
 
 def Print_name_and_ID_for_Groceries():
     #establish interface
@@ -38,9 +65,11 @@ def Print_name_and_ID_for_Groceries():
     cursor.execute(sql)
     results = cursor.fetchall()
     #print nicely
-    print("  ID   Name")
+    print("| ID | Name                                                              |")
+    print("-"*74)
     for grocery in results:
         print(f"| {grocery[0]:<{Product_ID_Length}} | {grocery[1]:<{Product_Name_Length}} |")
+    print("-"*74)
 
 def Print_brand_and_ID_for_brands():
     #establish interface
@@ -51,9 +80,11 @@ def Print_brand_and_ID_for_brands():
     cursor.execute(sql)
     results = cursor.fetchall()
     #print nicely
-    print("  ID   Brand")
+    print("| ID | Brand           |")
+    print("-"*24)
     for brand in results:
         print(f"| {brand[0]:<{Brand_ID_Length}} | {brand[1]:<{Brand_Name_Length}} |")
+    print("-"*24)
 
 def search_for_grocery():
     #show name and id table
@@ -174,6 +205,8 @@ def show_greaterthan_or_smallerthan():
                     "| 2. | Serving_size         |",
                     "| 3. | Calorise per serving |",
                     "| 4. | Sevings              |"]
+    operations = {"1":">",
+                  "2":"<"}
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     while True:
@@ -205,7 +238,7 @@ def show_greaterthan_or_smallerthan():
             value = int(input("what value would you like to sort by? If you want to go back to main menu input 'back'.\n"))
             if value == "back":
                 main_menu()
-            sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE {options[str(column)]} > {value}"
+            sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE {options[str(column)]} {operations[operator]} {value}"
             cursor.execute(sql)
             results = cursor.fetchall()
             print(options[str(column)])
@@ -336,12 +369,14 @@ def main_menu():
                        "2":ORDER_BY,
                        "3":show_greaterthan_or_smallerthan,
                        "4":sort_by_one_brand,
-                       "5":sort_by_one_product_type}
+                       "5":sort_by_one_product_type,
+                       "6":print_whole_table}
         all_options_text = ["| 1.    | Search for a specific item                        |",
                             "| 2.    | sort by a specific data type                      |",
                             "| 3.    | sort any column by greater than or smaller than   |",
                             "| 4.    | search for all items with a specific brand        |",
                             "| 5.    | search for all items with a specific product type |",
+                            "| 6.    | print the whole table                             |",
                             "| quit. | Quit the program                                  |"]
         for option in all_options_text:
             print(option)
