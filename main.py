@@ -363,7 +363,7 @@ def sort_by_one_product_type():
             print("Invalid input") 
             print("")
 
-def get_new_data_for_the_table():
+def gets_new_data_for_the_table_and_appends_all_new_data():
     
     while True:
         new_greocery_name = input("what is the name of this new grocery?\n")
@@ -426,6 +426,7 @@ def get_new_data_for_the_table():
             print("Invalid input")    
             print("")
     Print_brand_and_ID_for_brands()
+    new_brand = False
     found_brand = False
     while True:
         try:
@@ -443,12 +444,14 @@ def get_new_data_for_the_table():
                     results = results[0]
                     results = results[0]
                     if new_grocery_brand_name in range(1,results):
+
                         found_brand = True
                         break
                     else:
                         print("Invalid input")
                     db.close()
             elif new_grocery_brand_name_y_n == "n":
+                new_brand = True
                 new_grocery_brand_name = input("what is the name of you product's brand?\n")
                 break
             else:
@@ -460,6 +463,7 @@ def get_new_data_for_the_table():
             print("Invalid input3")
             print("")
     Print_producttype_and_ID_for_products()
+    new_product_type = False
     found_product_type = False
     while True:
         try:
@@ -478,11 +482,13 @@ def get_new_data_for_the_table():
                     results = results[0]
                     if new_grocery_product_type in range(1,results):
                         found_product_type = True
+
                         break
                     else:
                         print("Invalid input")
                     db.close()
             elif new_grocery_product_type_y_n == "n":
+                new_product_type = True
                 new_grocery_product_type = input("what is the name of you product's brand?\n")
                 break
             else:
@@ -495,6 +501,87 @@ def get_new_data_for_the_table():
             print("Invalid input3")
             print("")
 
+    while True:
+        try:
+            you_sure = input("are you sure you want to append this data? y/n\n")
+            if you_sure == "y":
+                if new_brand == True:
+                    append_data_to_brand_table(new_grocery_brand_name)
+                if new_product_type == True:
+                    append_data_to_product_type_table(new_grocery_product_type)
+
+                new_brand_ID = get_id_for_new_brand(new_grocery_brand_name, new_grocery_brand_name)
+
+                new_product_type_ID = get_id_for_new_product_type(new_grocery_product_type, new_grocery_product_type)
+
+                print(new_brand_ID)
+                print(new_product_type_ID)
+                append_data_to_the_grocery_table(new_greocery_name, new_grocery_servings, new_grocery_serving_size_g, new_grocery_price_c, new_grocery_Calories_per_serving, new_brand_ID, new_product_type_ID)
+                break
+            elif you_sure == "n":
+                main_menu()
+            else:
+                print("Invalid input")
+        except:
+            print("invalid")
+
+def append_data_to_brand_table(brand):
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    sql = f"insert into brand (Name) select '{brand}'"
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def append_data_to_product_type_table(product_type):
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    sql = f"insert into Product_type (Type) select '{product_type}'"
+    cursor.execute(sql)
+    db.commit()
+    db.close()
+
+def get_id_for_new_brand(new_brand_id, new_brand_name):
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    try:
+        sql = f"select brand.ID from brand where brand.ID = {new_brand_id}"
+        cursor.execute(sql)
+    except:
+        try:
+            sql = f"select brand.ID from brand where brand.Name = '{new_brand_name}'"
+            cursor.execute(sql)
+        except:
+            pass
+    results = cursor.fetchall()
+    results = results[0]
+    results = results[0]
+    return results
+
+def get_id_for_new_product_type(new_product_type_id, new_product_type):
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    try:
+        sql = f"select product_type.ID from product_type where product_type.ID = {new_product_type_id}"
+        cursor.execute(sql)
+    except:
+        try:
+            sql = f"select product_type.ID from product_type where product_type.type = '{new_product_type}'"
+            cursor.execute(sql)
+        except:
+            pass
+    results = cursor.fetchall()
+    results = results[0]
+    results = results[0]
+    return results
+
+def append_data_to_the_grocery_table(grocery_name, grocery_servings, grocery_serving_size, grocery_price, grocery_cps, brand_id, product_type_id):
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    sql = f"insert into groceries (name, brand_id, calories_per_serving, servings, serving_size_g, price_c, product_type_id) select '{grocery_name}', {brand_id}, {grocery_cps}, {grocery_servings}, {grocery_serving_size}, {grocery_price}, {product_type_id}"
+    cursor.execute(sql)
+    db.commit()
+    db.close()
 
             
 
@@ -507,7 +594,7 @@ def main_menu():
                        "4":sort_by_one_brand,
                        "5":sort_by_one_product_type,
                        "6":print_whole_table,
-                       "7":get_new_data_for_the_table}
+                       "7":gets_new_data_for_the_table_and_appends_all_new_data}
         all_options_text = ["| 1.    | Search for a specific item                        |",
                             "| 2.    | sort by a specific data type                      |",
                             "| 3.    | sort any column by greater than or smaller than   |",
@@ -532,6 +619,5 @@ def main_menu():
             print("")
             print("that is not an option")
             print("")
-
 
 main_menu()
