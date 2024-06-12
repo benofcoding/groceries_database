@@ -681,7 +681,7 @@ def remove_data_from_brand_table():
 
             if remove_brand_id in all_brand_ids:
                 print("")
-                confirm = input("are you sure ou want to delete that brand WARNING if you delete a brand that a grocery has set as its ID it will be deleted\n")
+                confirm = input("are you sure you want to delete that brand y/n WARNING if you delete a brand that a grocery has set as its ID it will be deleted\n")
                 print("")
                 if confirm == "y":
                     db = sqlite3.connect(DATABASE)
@@ -694,9 +694,55 @@ def remove_data_from_brand_table():
                     db.commit()
                     db.close
                     break
+                if confirm == "n":
+                    main_menu()
             else:
                 print("")
-                print("invalid input2")
+                print("invalid input")
+                print("")
+        except:
+            print("")
+            print("invalid input")
+            print("")
+
+def remove_data_from_product_type_table():
+    while True:
+        try:
+            Print_producttype_and_ID_for_products()
+            print("")
+            remove_product_type_id = int(input("what is the ID of the producttype you would like to remove?\n"))
+            print("")
+
+            db = sqlite3.connect(DATABASE)
+            cursor = db.cursor()
+            sql = "select ID from Product_type"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            all_product_type_ids = []
+            for IDs in results:
+                all_product_type_ids.append(IDs[0])
+            db.close
+
+            if remove_product_type_id in all_product_type_ids:
+                print("")
+                confirm = input("are you sure you want to delete that product type y/n WARNING if you delete a product type that a grocery has set as its ID it will be deleted\n")
+                print("")
+                if confirm == "y":
+                    db = sqlite3.connect(DATABASE)
+                    cursor = db.cursor()
+                    sql = f"delete from groceries where Product_type_id = {remove_product_type_id}"
+                    cursor.execute(sql)
+                    db.commit()
+                    sql = f"delete from product_type where ID = {remove_product_type_id}"
+                    cursor.execute(sql)
+                    db.commit()
+                    db.close
+                    break
+                if confirm == "n":
+                    main_menu()
+            else:
+                print("")
+                print("invalid input")
                 print("")
         except:
             print("")
@@ -713,18 +759,20 @@ def main_menu(password_check):
                        "6":print_whole_table,
                        "7":gets_new_data_for_the_table_and_appends_all_new_data,
                        "8":remove_data_from_groceries_table,
-                       "9":remove_data_from_brand_table}
-        blocked_options = ["7", "8", "9"]
-        all_options_text = ["| 1.    | Search for a specific item                        |",
-                            "| 2.    | sort by a specific data type                      |",
-                            "| 3.    | sort any column by greater than or smaller than   |",
-                            "| 4.    | search for all items with a specific brand        |",
-                            "| 5.    | search for all items with a specific product type |",
-                            "| 6.    | print the whole table                             |",
-                            "| 7.    | add data to the table                             |",
-                            "| 8.    | remove a piece of data from the groceries table   |",
-                            "| 9.    | remove a piece of data from the brand table       |",
-                            "| quit. | Quit the program                                  |"]
+                       "9":remove_data_from_brand_table,
+                       "10":remove_data_from_product_type_table}
+        blocked_options = ["7", "8", "9", "10"]
+        all_options_text = ["| 1.    | Search for a specific item                         |",
+                            "| 2.    | sort by a specific data type                       |",
+                            "| 3.    | sort any column by greater than or smaller than    |",
+                            "| 4.    | search for all items with a specific brand         |",
+                            "| 5.    | search for all items with a specific product type  |",
+                            "| 6.    | print the whole table                              |",
+                            "| 7.    | add data to the table                              |",
+                            "| 8.    | remove a piece of data from the groceries table    |",
+                            "| 9.    | remove a piece of data from the brand table        |",
+                            "| 10.   | remove a piece of data from the product type table |"
+                            "| quit. | Quit the program                                   |"]
         for option in all_options_text:
             print(option)
         try:
