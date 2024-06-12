@@ -15,13 +15,18 @@ Brand_Name_Length = 15
 Product_Type_ID_Length = 2
 Product_Type_Length = 25
 
+username_count = 5
+password_count = 5
 #all functions
+
+
+
 def print_whole_table():
     #establish interface
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     #run sql quere
-    sql = "SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID"
+    sql = "SELECT Groceries.ID, Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID"
     cursor.execute(sql)
     results = cursor.fetchall()
     #print nicely
@@ -33,10 +38,10 @@ def print_whole_table():
     for acromyn in Acronmys:
         print(acromyn)
     print("")
-    print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
+    print("| ID | Name                                                              | P(c) | SS  | CPS | S  | Type                      | Brand           |")
     print("-"*144)
     for result in results:
-        print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
+        print(f"| {result[0]:<{Product_ID_Length}} | {result[1]:<{Product_Name_Length}} | {result[2]:<{Price_length}} | {result[3]:<{Serving_Size_Length}} | {result[4]:<{Calories_Per_Serving_Length}} | {result[5]:<{Servings_Length}} | {result[6]:<{Product_Type_Length}} | {result[7]:<{Brand_Name_Length}} |")
     print("-"*144)
     print("")
     db.close() 
@@ -61,7 +66,7 @@ def Print_name_and_ID_for_Groceries():
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     #run sql quere
-    sql = "SELECT Groceries.ID, Groceries.Name FROM Groceries"
+    sql = "SELECT Groceries.ID, Groceries.Name FROM Groceries ORDER BY groceries.ID ASC"
     cursor.execute(sql)
     results = cursor.fetchall()
     #print nicely
@@ -100,7 +105,7 @@ def search_for_grocery():
             #get users wanted product to show or go back to main menu if wanted
             ID = input("Input the ID of the grocery you would like to see more information about or input 'back' to go back?\n")
             if ID == "back":
-                main_menu()
+                main_menu(login)
             #run sql quere
             sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE Groceries.ID = '{ID}'"
             cursor.execute(sql)
@@ -157,7 +162,7 @@ def ORDER_BY():
     while True:
         Sort_by = input("either input the ID of what you would like to sort by or input 'back' to go back.\n")
         if Sort_by == "back":
-            main_menu()
+            main_menu(login)
         elif Sort_by == "1" or Sort_by == "2" or Sort_by == "3" or Sort_by == "4":
             break
         else:
@@ -168,7 +173,7 @@ def ORDER_BY():
     while True:
         ASC_DESC = input("do you want to sort by ascending or descending? ASC/DESC. type 'back' if you want to go back.\n")
         if ASC_DESC == "back":
-            main_menu()
+            main_menu(login)
         if ASC_DESC.lower() == "asc" or ASC_DESC.lower() == "desc":
             sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID ORDER BY {options[Sort_by]} {ASC_DESC}"
             cursor.execute(sql)
@@ -216,7 +221,7 @@ def show_greaterthan_or_smallerthan():
 
         column = input("input the ID of the column you want to sort. If you want to go back to main menu input 'back'.\n")
         if column == "back":
-            main_menu()
+            main_menu(login)
         elif column == "1" or column == "2" or column == "3" or column == "4":
             break
         else:
@@ -226,7 +231,7 @@ def show_greaterthan_or_smallerthan():
     while True:  
         operator = input("Would you like to sort by greater than or less than?, input 1 or 2. If you want to go back to main menu input 'back'.\n")
         if operator == "back":
-            main_menu()
+            main_menu(login)
         elif operator == "1" or operator == "2":
             break
         else:
@@ -237,7 +242,7 @@ def show_greaterthan_or_smallerthan():
         try:
             value = int(input("what value would you like to sort by? If you want to go back to main menu input 'back'.\n"))
             if value == "back":
-                main_menu()
+                main_menu(login)
             sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE {options[str(column)]} {operations[operator]} {value}"
             cursor.execute(sql)
             results = cursor.fetchall()
@@ -277,7 +282,7 @@ def sort_by_one_brand():
             #get users wanted product to show or go back to main menu if wanted
             ID = input("Input the ID of the Brand you would like to sort by about or input 'back' to go back?\n")
             if ID == "back":
-                main_menu()
+                main_menu(login)
             #run sql quere
             sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE Brand.ID = '{ID}'"
             cursor.execute(sql)
@@ -327,7 +332,7 @@ def sort_by_one_product_type():
             #get users wanted product to show or go back to main menu if wanted
             ID = input("Input the ID of the Product type you would like to display or input 'back' to go back?\n")
             if ID == "back":
-                main_menu()
+                main_menu(login)
             #run sql quere
             sql = f"SELECT Groceries.Name, Groceries.price_c, Groceries.Serving_Size_g, Groceries.Calories_Per_Serving, Groceries.Servings, Product_Type.Type, Brand.Name FROM Groceries JOIN Brand on Brand.ID = Groceries.Brand_ID JOIN Product_Type on Product_Type.ID = Groceries.Product_Type_ID WHERE Product_type.ID = '{ID}'"
             cursor.execute(sql)
@@ -443,7 +448,7 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
                     results = cursor.fetchall()
                     results = results[0]
                     results = results[0]
-                    if new_grocery_brand_name in range(1,results):
+                    if new_grocery_brand_name in range(1,results+1):
 
                         found_brand = True
                         break
@@ -480,7 +485,7 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
                     results = cursor.fetchall()
                     results = results[0]
                     results = results[0]
-                    if new_grocery_product_type in range(1,results):
+                    if new_grocery_product_type in range(1,results+1):
                         found_product_type = True
 
                         break
@@ -519,7 +524,7 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
                 append_data_to_the_grocery_table(new_greocery_name, new_grocery_servings, new_grocery_serving_size_g, new_grocery_price_c, new_grocery_Calories_per_serving, new_brand_ID, new_product_type_ID)
                 break
             elif you_sure == "n":
-                main_menu()
+                main_menu(login)
             else:
                 print("Invalid input")
         except:
@@ -583,10 +588,76 @@ def append_data_to_the_grocery_table(grocery_name, grocery_servings, grocery_ser
     db.commit()
     db.close()
 
+def username_and_password(count_username, count_password):
+    print("before we start we need username an password for some of the database editing options")
+    username = "Ben Gorman"
+    password = "password1234"
+    while count_username != 0:
+        username_input = input("what is your username")
+        if username_input == username:
+            break
+        else:
+            count_username -= 1
+            print("")
+            print(f"invalid username you have {count_username} more attempts")
+            print("")
+    
+    if count_username == 0:
+        print("")
+        print("you are out of username attempts")
+        print("")
+        return "failed"
+
+    while count_password != 0:
+        password_input = input("what is your password")
+        if password_input == password:
+            return "success"
+        else:
+            count_password -= 1
+            print("")
+            print(f"invalid password you have {count_password} more attempts")
+            print("")
             
+    if count_password == 0:
+        print("")
+        print("you are out of username attempts")
+        print("")
+        return "failed"
+
+def remove_data_from_groceries_table():
+    print_whole_table()
+    while True:
+        try:
+            remove_id = int(input("input the id of the grocery you would like to remove.\n"))
+            db = sqlite3.connect(DATABASE)
+            cursor = db.cursor()
+            sql = "select max(ID) from groceries"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            results = results[0]
+            results = results[0]
+            print(results)
+            if remove_id in range(1,results+1):
+                db = sqlite3.connect(DATABASE)
+                cursor = db.cursor()
+                sql = f"delete from Groceries where ID = {remove_id}"
+                cursor.execute(sql)
+                db.commit()
+                db.close
+                break
+            else:
+                print("")
+                print("Invalid input")
+                print("")
+            db.close
+        except:
+            print("")
+            print("Invalid input")
+            print("")
 
 
-def main_menu():
+
+def main_menu(password_check):
     while True:
         all_options = {"1":search_for_grocery,
                        "2":ORDER_BY,
@@ -594,7 +665,9 @@ def main_menu():
                        "4":sort_by_one_brand,
                        "5":sort_by_one_product_type,
                        "6":print_whole_table,
-                       "7":gets_new_data_for_the_table_and_appends_all_new_data}
+                       "7":gets_new_data_for_the_table_and_appends_all_new_data,
+                       "8":remove_data_from_groceries_table}
+        blocked_options = ["8"]
         all_options_text = ["| 1.    | Search for a specific item                        |",
                             "| 2.    | sort by a specific data type                      |",
                             "| 3.    | sort any column by greater than or smaller than   |",
@@ -602,13 +675,20 @@ def main_menu():
                             "| 5.    | search for all items with a specific product type |",
                             "| 6.    | print the whole table                             |",
                             "| 7.    | add data to the table                             |",
+                            "| 8.    | remove a piece of data from the groceries table   |",
                             "| quit. | Quit the program                                  |"]
         for option in all_options_text:
             print(option)
         try:
             option_chosen = input("what would you like to do?\n") 
-            if str(option_chosen) in all_options:    
-                all_options[option_chosen]()
+            if str(option_chosen) in all_options: 
+                if (str(option_chosen) in blocked_options):
+                    if password_check == "failed":
+                        print("this option is blocked as you have failed to input a correct username or password")
+                    else:
+                        all_options[option_chosen]()
+                else:
+                    all_options[option_chosen]()
             elif str(option_chosen).lower() ==  "quit." or str(option_chosen).lower() == "quit":
                 break
             else:
@@ -620,4 +700,6 @@ def main_menu():
             print("that is not an option")
             print("")
 
-main_menu()
+login = username_and_password(username_count, password_count)
+
+main_menu(login)
