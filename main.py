@@ -363,6 +363,142 @@ def sort_by_one_product_type():
             print("Invalid input") 
             print("")
 
+def get_new_data_for_the_table():
+    
+    while True:
+        new_greocery_name = input("what is the name of this new grocery?\n")
+        if new_greocery_name == "":
+            print("")
+            print("Invalid input")
+            print("")
+        else:
+            break
+    while True:
+        try:
+            new_grocery_Calories_per_serving = int(input("how many calories per serving is this new grocey, please don't from using a negitive number.\n"))
+            if new_grocery_Calories_per_serving < 0:
+                print("")
+                print("that is not a positive number try again")
+                print("")
+            else:
+                break
+        except:
+            print("")
+            print("Invalid input")    
+            print("")
+    while True:
+        try:
+            new_grocery_servings = int(input("how many servings are in this new grocey, please don't from using a negitive number.\n"))
+            if new_grocery_servings < 0:
+                print("")
+                print("that is not a positive number try again")
+                print("")
+            else:
+                break
+        except:
+            print("")
+            print("Invalid input")    
+            print("")
+    while True:
+        try:
+            new_grocery_serving_size_g = int(input("how big are the serving sizes is this new grocey(UNIT grams), please don't from using a negitive number.\n"))
+            if new_grocery_serving_size_g < 0:
+                print("")
+                print("that is not a positive number try again")
+                print("")
+            else:
+                break
+        except:
+            print("")
+            print("Invalid input")    
+            print("")
+    while True:
+        try:
+            new_grocery_price_c = int(input("what is the price of this new grocey(UNIT cents), please don't from using a negitive number.\n"))
+            if new_grocery_price_c < 0:
+                print("")
+                print("that is not a positive number try again")
+                print("")
+            else:
+                break
+        except:
+            print("")
+            print("Invalid input")    
+            print("")
+    Print_brand_and_ID_for_brands()
+    found_brand = False
+    while True:
+        try:
+            if found_brand == True:
+                break
+            new_grocery_brand_name_y_n = input("is your new products brand in this table. y/n\n")
+            if new_grocery_brand_name_y_n == "y":
+                while True:
+                    new_grocery_brand_name = int(input("what is the ID of your products brand name?\n"))
+                    db = sqlite3.connect(DATABASE)
+                    cursor = db.cursor()
+                    sql = "select max(ID) from Product_type"
+                    cursor.execute(sql)
+                    results = cursor.fetchall()
+                    results = results[0]
+                    results = results[0]
+                    if new_grocery_brand_name in range(1,results):
+                        found_brand = True
+                        break
+                    else:
+                        print("Invalid input")
+                    db.close()
+            elif new_grocery_brand_name_y_n == "n":
+                new_grocery_brand_name = input("what is the name of you product's brand?\n")
+                break
+            else:
+                print("")
+                print("Invalid input2")
+                print("")
+        except:
+            print("")
+            print("Invalid input3")
+            print("")
+    Print_producttype_and_ID_for_products()
+    found_product_type = False
+    while True:
+        try:
+            if found_product_type == True:
+                break
+            new_grocery_product_type_y_n = input("is your new products brand in this table. y/n\n")
+            if new_grocery_product_type_y_n == "y":
+                while True:
+                    new_grocery_product_type = int(input("what is the ID of your products brand name?\n"))
+                    db = sqlite3.connect(DATABASE)
+                    cursor = db.cursor()
+                    sql = "select max(ID) from Brand"
+                    cursor.execute(sql)
+                    results = cursor.fetchall()
+                    results = results[0]
+                    results = results[0]
+                    if new_grocery_product_type in range(1,results):
+                        found_product_type = True
+                        break
+                    else:
+                        print("Invalid input")
+                    db.close()
+            elif new_grocery_product_type_y_n == "n":
+                new_grocery_product_type = input("what is the name of you product's brand?\n")
+                break
+            else:
+                print("")
+                print("Invalid input2")
+                print("")
+
+        except:
+            print("")
+            print("Invalid input3")
+            print("")
+
+
+            
+
+
 def main_menu():
     while True:
         all_options = {"1":search_for_grocery,
@@ -370,13 +506,15 @@ def main_menu():
                        "3":show_greaterthan_or_smallerthan,
                        "4":sort_by_one_brand,
                        "5":sort_by_one_product_type,
-                       "6":print_whole_table}
+                       "6":print_whole_table,
+                       "7":get_new_data_for_the_table}
         all_options_text = ["| 1.    | Search for a specific item                        |",
                             "| 2.    | sort by a specific data type                      |",
                             "| 3.    | sort any column by greater than or smaller than   |",
                             "| 4.    | search for all items with a specific brand        |",
                             "| 5.    | search for all items with a specific product type |",
                             "| 6.    | print the whole table                             |",
+                            "| 7.    | add data to the table                             |",
                             "| quit. | Quit the program                                  |"]
         for option in all_options_text:
             print(option)
@@ -394,5 +532,6 @@ def main_menu():
             print("")
             print("that is not an option")
             print("")
+
 
 main_menu()
