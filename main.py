@@ -443,12 +443,15 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
                     new_grocery_brand_name = int(input("what is the ID of your products brand name?\n"))
                     db = sqlite3.connect(DATABASE)
                     cursor = db.cursor()
-                    sql = "select max(ID) from Product_type"
+                    sql = "select ID from Brand"
                     cursor.execute(sql)
                     results = cursor.fetchall()
-                    results = results[0]
-                    results = results[0]
-                    if new_grocery_brand_name in range(1,results+1):
+                    all_brand_ids = []
+                    for IDs in results:
+                        all_brand_ids.append(IDs[0])
+                    db.close
+
+                    if new_grocery_brand_name in all_brand_ids:
 
                         found_brand = True
                         break
@@ -461,11 +464,11 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
                 break
             else:
                 print("")
-                print("Invalid input2")
+                print("Invalid input")
                 print("")
         except:
             print("")
-            print("Invalid input3")
+            print("Invalid input")
             print("")
     Print_producttype_and_ID_for_products()
     new_product_type = False
@@ -480,12 +483,14 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
                     new_grocery_product_type = int(input("what is the ID of your products brand name?\n"))
                     db = sqlite3.connect(DATABASE)
                     cursor = db.cursor()
-                    sql = "select max(ID) from Brand"
+                    sql = "select ID from product_type"
                     cursor.execute(sql)
                     results = cursor.fetchall()
-                    results = results[0]
-                    results = results[0]
-                    if new_grocery_product_type in range(1,results+1):
+                    all_product_type_ids = []
+                    for IDs in results:
+                        all_product_type_ids.append(IDs[0])
+                    db.close
+                    if new_grocery_product_type in all_product_type_ids:
                         found_product_type = True
 
                         break
@@ -498,12 +503,12 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
                 break
             else:
                 print("")
-                print("Invalid input2")
+                print("Invalid input")
                 print("")
 
         except:
             print("")
-            print("Invalid input3")
+            print("Invalid input")
             print("")
 
     while True:
@@ -593,7 +598,7 @@ def username_and_password(count_username, count_password):
     username = "Ben Gorman"
     password = "password1234"
     while count_username != 0:
-        username_input = input("what is your username")
+        username_input = input("what is your username\n")
         if username_input == username:
             break
         else:
@@ -609,7 +614,7 @@ def username_and_password(count_username, count_password):
         return "failed"
 
     while count_password != 0:
-        password_input = input("what is your password")
+        password_input = input("what is your password\n")
         if password_input == password:
             return "success"
         else:
@@ -631,13 +636,14 @@ def remove_data_from_groceries_table():
             remove_id = int(input("input the id of the grocery you would like to remove.\n"))
             db = sqlite3.connect(DATABASE)
             cursor = db.cursor()
-            sql = "select max(ID) from groceries"
+            sql = "select ID from groceries"
             cursor.execute(sql)
             results = cursor.fetchall()
-            results = results[0]
-            results = results[0]
-            print(results)
-            if remove_id in range(1,results+1):
+            all_grocery_ids = []
+            for IDs in results:
+                all_grocery_ids.append(IDs[0])
+            db.close
+            if remove_id in all_grocery_ids:
                 db = sqlite3.connect(DATABASE)
                 cursor = db.cursor()
                 sql = f"delete from Groceries where ID = {remove_id}"
@@ -655,7 +661,47 @@ def remove_data_from_groceries_table():
             print("Invalid input")
             print("")
 
+def remove_data_from_brand_table():
+    while True:
+        try:
+            Print_brand_and_ID_for_brands()
+            print("")
+            remove_brand_id = int(input("what is the ID of the brand you would like to remove?\n"))
+            print("")
 
+            db = sqlite3.connect(DATABASE)
+            cursor = db.cursor()
+            sql = "select ID from Brand"
+            cursor.execute(sql)
+            results = cursor.fetchall()
+            all_brand_ids = []
+            for IDs in results:
+                all_brand_ids.append(IDs[0])
+            db.close
+
+            if remove_brand_id in all_brand_ids:
+                print("")
+                confirm = input("are you sure ou want to delete that brand WARNING if you delete a brand that a grocery has set as its ID it will be deleted\n")
+                print("")
+                if confirm == "y":
+                    db = sqlite3.connect(DATABASE)
+                    cursor = db.cursor()
+                    sql = f"delete from groceries where Brand_id = {remove_brand_id}"
+                    cursor.execute(sql)
+                    db.commit()
+                    sql = f"delete from brand where ID = {remove_brand_id}"
+                    cursor.execute(sql)
+                    db.commit()
+                    db.close
+                    break
+            else:
+                print("")
+                print("invalid input2")
+                print("")
+        except:
+            print("")
+            print("invalid input")
+            print("")
 
 def main_menu(password_check):
     while True:
@@ -666,8 +712,9 @@ def main_menu(password_check):
                        "5":sort_by_one_product_type,
                        "6":print_whole_table,
                        "7":gets_new_data_for_the_table_and_appends_all_new_data,
-                       "8":remove_data_from_groceries_table}
-        blocked_options = ["8"]
+                       "8":remove_data_from_groceries_table,
+                       "9":remove_data_from_brand_table}
+        blocked_options = ["7", "8", "9"]
         all_options_text = ["| 1.    | Search for a specific item                        |",
                             "| 2.    | sort by a specific data type                      |",
                             "| 3.    | sort any column by greater than or smaller than   |",
@@ -676,6 +723,7 @@ def main_menu(password_check):
                             "| 6.    | print the whole table                             |",
                             "| 7.    | add data to the table                             |",
                             "| 8.    | remove a piece of data from the groceries table   |",
+                            "| 9.    | remove a piece of data from the brand table       |",
                             "| quit. | Quit the program                                  |"]
         for option in all_options_text:
             print(option)
