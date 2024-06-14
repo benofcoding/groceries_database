@@ -13,15 +13,16 @@ Price_length = 4
 Brand_ID_Length = 2
 Brand_Name_Length = 15
 Product_Type_ID_Length = 2
-Product_Type_Length = 25
+Product_Type_Length = 30
 
 username_count = 5
 password_count = 5
+
+
 #all functions
-
-
-
 def print_whole_table():
+    """this function prints the whole table including: ID, Name, price, calorise per serving,
+    servings, servings size, brand name, product type"""
     #establish interface
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
@@ -47,6 +48,7 @@ def print_whole_table():
     db.close() 
 
 def Print_producttype_and_ID_for_products():
+    """this function prints the product type ID and product type"""
     #establish interface
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
@@ -62,6 +64,7 @@ def Print_producttype_and_ID_for_products():
     print("-"*34)
 
 def Print_name_and_ID_for_Groceries():
+    """this function prints the Grocery name and Grocery ID"""
     #establish interface
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
@@ -77,6 +80,7 @@ def Print_name_and_ID_for_Groceries():
     print("-"*74)
 
 def Print_brand_and_ID_for_brands():
+    """this function print the Brand name and Brand ID"""
     #establish interface
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
@@ -92,6 +96,8 @@ def Print_brand_and_ID_for_brands():
     print("-"*24)
 
 def search_for_grocery():
+    """this function lets the user input the ID of a specific grocery and it will
+    bring up more information about that specific Grocery."""
     #show name and id table
     Print_name_and_ID_for_Groceries()
     print("")
@@ -142,6 +148,8 @@ def search_for_grocery():
             print("")
 
 def ORDER_BY():
+    """this function lets the user sort one of the columns[price, servings size, servings, calories per person]
+    be either ascending or descending"""
     options = {"1":"Groceries.price_c",
                         "2":"Groceries.Serving_Size_g",
                         "3":"Groceries.Calories_Per_Serving",
@@ -201,6 +209,8 @@ def ORDER_BY():
             print("")
 
 def show_greaterthan_or_smallerthan():
+    """this funtion lets the user filter any column[price, servings size, servings, calories per person]
+    by greater than or less than by an inputed value"""
     options = {"1":"Groceries.price_c",
                "2":"Groceries.Serving_Size_g",
                "3":"Groceries.Calories_Per_Serving",
@@ -269,6 +279,7 @@ def show_greaterthan_or_smallerthan():
             print("")
 
 def sort_by_one_brand():
+    """this funtion lets the user filter by any inputed brand"""
     #show name and id table
     Print_brand_and_ID_for_brands()
     print("")
@@ -319,6 +330,7 @@ def sort_by_one_brand():
             print("")
 
 def sort_by_one_product_type():
+    """this function lets the user filter by any specific product type"""
     #show product_type and ID table
     Print_producttype_and_ID_for_products()
     print("")
@@ -369,7 +381,7 @@ def sort_by_one_product_type():
             print("")
 
 def gets_new_data_for_the_table_and_appends_all_new_data():
-    
+    """this function gets all the inputs for appending new data to all of the tables from the user"""
     while True:
         new_greocery_name = input("what is the name of this new grocery?\n")
         if new_greocery_name == "":
@@ -536,6 +548,7 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
             print("invalid")
 
 def append_data_to_brand_table(brand):
+    """this function appends data to the brand table based on a given input to the function"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     sql = f"insert into brand (Name) select '{brand}'"
@@ -544,6 +557,7 @@ def append_data_to_brand_table(brand):
     db.close()
 
 def append_data_to_product_type_table(product_type):
+    """this function appends data to the product type table based on a given input to the function"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     sql = f"insert into Product_type (Type) select '{product_type}'"
@@ -552,6 +566,7 @@ def append_data_to_product_type_table(product_type):
     db.close()
 
 def get_id_for_new_brand(new_brand_id, new_brand_name):
+    """this function returns the ID of a given name or ID from the brand table"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     try:
@@ -569,6 +584,7 @@ def get_id_for_new_brand(new_brand_id, new_brand_name):
     return results
 
 def get_id_for_new_product_type(new_product_type_id, new_product_type):
+    """this function returns the ID of a given type or ID from the product type table"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     try:
@@ -586,6 +602,7 @@ def get_id_for_new_product_type(new_product_type_id, new_product_type):
     return results
 
 def append_data_to_the_grocery_table(grocery_name, grocery_servings, grocery_serving_size, grocery_price, grocery_cps, brand_id, product_type_id):
+    """this function appends data inputed to the grocery table"""
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
     sql = f"insert into groceries (name, brand_id, calories_per_serving, servings, serving_size_g, price_c, product_type_id) select '{grocery_name}', {brand_id}, {grocery_cps}, {grocery_servings}, {grocery_serving_size}, {grocery_price}, {product_type_id}"
@@ -594,13 +611,19 @@ def append_data_to_the_grocery_table(grocery_name, grocery_servings, grocery_ser
     db.close()
 
 def username_and_password(count_username, count_password):
+    """this funciton gets the user to input a username and password and returs either 'falied' or 'success' based on the inputs"""
+    print("")
     print("before we start we need username an password for some of the database editing options")
-    username = "Ben Gorman"
+    print("")
+    username = "ben gorman"
     password = "password1234"
     while count_username != 0:
-        username_input = input("what is your username\n")
-        if username_input == username:
-            break
+        username_input = input("What is your username? if you want to continue without logging in say 'main menu'\n")
+        print("")
+        if username_input.lower() == username:
+            return "success"
+        elif username_input.lower() == "main menu":
+            return "failed"
         else:
             count_username -= 1
             print("")
@@ -614,9 +637,11 @@ def username_and_password(count_username, count_password):
         return "failed"
 
     while count_password != 0:
-        password_input = input("what is your password\n")
+        password_input = input("What is your password? if you want to continue without logging in say 'main menu'\n")
         if password_input == password:
             return "success"
+        elif username_input.lower() == "main menu":
+            return "failed"
         else:
             count_password -= 1
             print("")
@@ -630,6 +655,7 @@ def username_and_password(count_username, count_password):
         return "failed"
 
 def remove_data_from_groceries_table():
+    """this function removes data from the grocery table based on the given input"""
     print_whole_table()
     while True:
         try:
@@ -662,6 +688,8 @@ def remove_data_from_groceries_table():
             print("")
 
 def remove_data_from_brand_table():
+    """this function gets the user to input the ID of the brand they would like to remove and removes it.
+    it also removes all coresponding grocerys with that brand"""
     while True:
         try:
             Print_brand_and_ID_for_brands()
@@ -706,6 +734,8 @@ def remove_data_from_brand_table():
             print("")
 
 def remove_data_from_product_type_table():
+    """this function gets the user to input the ID of the product_type they would like to remove and removes it.
+    it also removes all coresponding grocerys with that product_type"""
     while True:
         try:
             Print_producttype_and_ID_for_products()
@@ -750,6 +780,9 @@ def remove_data_from_product_type_table():
             print("")
 
 def main_menu(password_check):
+    """this function controls the useage of all of the other functions that the user can use. 
+    it gets the user to input the ID of the function they want to use. if required it checks that the user
+    has successfully logged in with a password. it also lets you quit the program"""
     while True:
         all_options = {"1":search_for_grocery,
                        "2":ORDER_BY,
@@ -768,10 +801,10 @@ def main_menu(password_check):
                             "| 4.    | search for all items with a specific brand         |",
                             "| 5.    | search for all items with a specific product type  |",
                             "| 6.    | print the whole table                              |",
-                            "| 7.    | add data to the table                              |",
+                            "| 7.    | add data to the database                           |",
                             "| 8.    | remove a piece of data from the groceries table    |",
                             "| 9.    | remove a piece of data from the brand table        |",
-                            "| 10.   | remove a piece of data from the product type table |"
+                            "| 10.   | remove a piece of data from the product type table |",
                             "| quit. | Quit the program                                   |"]
         for option in all_options_text:
             print(option)
@@ -780,7 +813,9 @@ def main_menu(password_check):
             if str(option_chosen) in all_options: 
                 if (str(option_chosen) in blocked_options):
                     if password_check == "failed":
+                        print("")
                         print("this option is blocked as you have failed to input a correct username or password")
+                        print("")
                     else:
                         all_options[option_chosen]()
                 else:
