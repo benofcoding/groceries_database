@@ -13,7 +13,7 @@ Price_length = 4
 Brand_ID_Length = 2
 Brand_Name_Length = 15
 Product_Type_ID_Length = 2
-Product_Type_Length = 30
+Product_Type_Length = 25
 
 username_count = 5
 password_count = 5
@@ -21,7 +21,7 @@ password_count = 5
 
 #all functions
 def print_whole_table():
-    """this function prints the whole table including: ID, Name, price, calorise per serving,
+    """this function prints the whole table including: ID, Name, price, calories per serving,
     servings, servings size, brand name, product type"""
     #establish interface
     db = sqlite3.connect(DATABASE)
@@ -58,7 +58,7 @@ def Print_producttype_and_ID_for_products():
     cursor.execute(sql)
     results = cursor.fetchall()
     #print nicely
-    print("| ID | Brand                     |")
+    print("| ID | type                      |")
     print("-"*34)
     for product in results:
         print(f"| {product[0]:<{Product_Type_ID_Length}} | {product[1]:<{Product_Type_Length}} |")
@@ -134,10 +134,10 @@ def search_for_grocery():
                 #print the table and columns nicely
                 print("")
                 result = results[0]
-                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
-                print("-"*144)
+                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                      | Brand           |")
+                print("-"*139)
                 print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
-                print("-"*144)
+                print("-"*139)
                 print("")
                 #stop the function
                 db.close()
@@ -205,11 +205,11 @@ def ORDER_BY():
             for acromyn in Acronmys:
                 print(acromyn)
             print("")
-            print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
-            print("-"*144)
+            print("| Name                                                              | P(c) | SS  | CPS | S  | Type                      | Brand           |")
+            print("-"*139)
             for result in results:
                 print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
-            print("-"*144)
+            print("-"*139)
             print("")
             db.close()
             break
@@ -297,11 +297,11 @@ def show_greaterthan_or_smallerthan():
             for acromyn in Acronmys:
                 print(acromyn)
             print("")
-            print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
-            print("-"*144)
+            print("| Name                                                              | P(c) | SS  | CPS | S  | Type                      | Brand           |")
+            print("-"*139)
             for result in results:
                 print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
-            print("-"*144)
+            print("-"*139)
             print("")
             db.close()
             break
@@ -347,11 +347,11 @@ def sort_by_one_brand():
                     print(acromyn)
                 #print the table and columns nicely
                 print("")
-                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
-                print("-"*144)
+                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                      | Brand           |")
+                print("-"*139)
                 for result in results:
                     print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
-                print("-"*144)
+                print("-"*139)
                 print("")
                 #stop the function
                 db.close()
@@ -398,11 +398,11 @@ def sort_by_one_product_type():
                     print(acromyn)
                 #print the table and columns nicely
                 print("")
-                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                           | Brand           |")
-                print("-"*144)
+                print("| Name                                                              | P(c) | SS  | CPS | S  | Type                      | Brand           |")
+                print("-"*139)
                 for result in results:
                     print(f"| {result[0]:<{Product_Name_Length}} | {result[1]:<{Price_length}} | {result[2]:<{Serving_Size_Length}} | {result[3]:<{Calories_Per_Serving_Length}} | {result[4]:<{Servings_Length}} | {result[5]:<{Product_Type_Length}} | {result[6]:<{Brand_Name_Length}} |")
-                print("-"*144)
+                print("-"*139)
                 print("")
                 #stop the function
                 db.close()
@@ -553,10 +553,10 @@ def gets_new_data_for_the_table_and_appends_all_new_data():
         try:
             if found_product_type == True:
                 break
-            new_grocery_product_type_y_n = input("is your new products brand in this table. y/n\n")
+            new_grocery_product_type_y_n = input("is your new products type in this table. y/n\n")
             if new_grocery_product_type_y_n == "y":
                 while True:
-                    new_grocery_product_type = int(input("what is the ID of your products brand name?\n"))
+                    new_grocery_product_type = int(input("what is the ID of your products type name?\n"))
                     db = sqlite3.connect(DATABASE)
                     cursor = db.cursor()
                     sql = "select ID from product_type"
@@ -715,7 +715,7 @@ def username_and_password(count_username, count_password):
         #if the username is false returns failed and takes one of the count
         #if the user decided not to log in then returns failed
         if username_input.lower() == username:
-            return "success"
+            break
         elif username_input.lower() == "main menu":
             return "failed"
         else:
@@ -765,7 +765,10 @@ def remove_data_from_groceries_table():
     while True:
         try:
             #asks for the ID if the grocery you want to remove
-            remove_id = int(input("input the id of the grocery you would like to remove.\n"))
+            remove_id = input("input the id of the grocery you would like to remove. if ypu want to go back type 'back'\n")
+            if remove_id == "back":
+                main_menu(login)
+            remove_id = int(remove_id)
             #establish interface
             db = sqlite3.connect(DATABASE)
             cursor = db.cursor()
@@ -811,7 +814,10 @@ def remove_data_from_brand_table():
             Print_brand_and_ID_for_brands()
             print("")
             #asks for the brand ID you want to remove
-            remove_brand_id = int(input("what is the ID of the brand you would like to remove?\n"))
+            remove_brand_id = input("what is the ID of the brand you would like to remove? if you want to go back input 'back'\n")
+            if remove_brand_id == "back":
+                main_menu(login)
+            remove_brand_id = int(remove_brand_id)
             print("")
             #establish interface
             db = sqlite3.connect(DATABASE)
@@ -846,7 +852,7 @@ def remove_data_from_brand_table():
                     break
                 #if confirmation is no then go to main menu
                 if confirm == "n":
-                    main_menu()
+                    main_menu(login)
 
         #if anything breaks:
             else:
@@ -868,7 +874,10 @@ def remove_data_from_product_type_table():
             Print_producttype_and_ID_for_products()
             print("")
             #asks for the product type ID you want to remove
-            remove_product_type_id = int(input("what is the ID of the producttype you would like to remove?\n"))
+            remove_product_type_id = input("what is the ID of the producttype you would like to remove? input 'back' if you want to go back\n")
+            if remove_product_type_id == "back":
+                main_menu(login)
+            remove_product_type_id == int(remove_product_type_id)
             print("")
             #establish interface
             db = sqlite3.connect(DATABASE)
@@ -883,7 +892,8 @@ def remove_data_from_product_type_table():
                 all_product_type_ids.append(IDs[0])
             db.close
             #verify's that user inputed valid ID in real ids list
-            if remove_product_type_id in all_product_type_ids:
+            print(all_product_type_ids)
+            if int(remove_product_type_id) in all_product_type_ids:
                 #asks for confermation because removing product type will sometimes also remove grocerys
                 print("")
                 confirm = input("are you sure you want to delete that product type y/n WARNING if you delete a product type that a grocery has set as its ID it will be deleted\n")
@@ -902,7 +912,7 @@ def remove_data_from_product_type_table():
                     break
                 #if confirmation is no then go to main menu
                 if confirm == "n":
-                    main_menu()
+                    main_menu(login)
         #if anything above had an incorrect input then:
             else:
                 print("")
